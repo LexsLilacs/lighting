@@ -12,34 +12,35 @@ void setup() {            //LED from left to right
   Serial.begin(9600);
 
 }
-
 void loop() {
   switchL = digitalRead(2);
   switchR = digitalRead(8);
 
-    if (switchL == HIGH) {
-      digitalWrite(4, HIGH);
-      digitalWrite(3, LOW);
-    } else {
-      digitalWrite(4, LOW);
-      digitalWrite(3, HIGH); 
-    }
-     if (switchR == HIGH) {
-      digitalWrite(6, HIGH);
-      digitalWrite(7, LOW);       
-    } else {
-      digitalWrite(6, LOW);
-      digitalWrite(7, HIGH); 
-    }
+    // first test if both buttons are pressed
     if (switchL == HIGH && switchR == HIGH){
       digitalWrite(5, HIGH);
-          if (digitalRead(5) == HIGH) {
-            digitalWrite(4, LOW);
-            digitalWrite(3, LOW);
-            digitalWrite(7, LOW);
-            digitalWrite(6, LOW);
-          } else {
-            digitalWrite(5, LOW);
-          }
-    }
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      digitalWrite(6, LOW);
+      digitalWrite(7, LOW);
+    } else {
+          // now that's out the way, we test for everything else as a whole here
+          // first test switchL
+        if (switchL == HIGH) {
+          digitalWrite(4, HIGH);
+          digitalWrite(3, LOW);
+        } else {
+          digitalWrite(4, LOW);
+          digitalWrite(3, HIGH); 
+        } // end if switchL
+          // then test switchR
+        if (switchR == HIGH) {
+          digitalWrite(6, HIGH);
+          digitalWrite(7, LOW);       
+        } else {
+          digitalWrite(6, LOW);
+          digitalWrite(7, HIGH); 
+        } //end if switchR
+    }     //end else of both high
+} 
 } 
