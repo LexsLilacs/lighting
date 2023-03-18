@@ -1,47 +1,45 @@
-//Using Arduino UNO
+#include <iostream>
+ #include <wiringPi.h>
+ #include <csignal>
+// global flag used to exit from the main loop
+ bool RUNNING = true;
+ 
+ // Blink an LED
+ void blink_led(int led, int time) {
+    digitalWrite(led, HIGH);
+    delay(time);
+    digitalWrite(led, LOW);
+   delay(time);
+ }
+ 
+ // Callback handler if CTRL-C signal is detected
+void my_handler(int s) {
+     std::cout << "Detected CTRL-C signal no. " << s << '\n';
+    RUNNING = false;
+ }
+ 
+ int main() {
+    // Register a callback function to be called if the user presses CTRL-C
+     std::signal(SIGINT, my_handler);
+     // Initialize wiringPi and allow the use of BCM pin numbering
+    wiringPiSetupGpio();
 
-int switchL = 0; //Left button
-int switchR = 0; //Right button
+     std::cout << "Controlling the GPIO pins with wiringPi\n";
 
-void setup() {            //LED from left to right
-  pinMode(3, OUTPUT); //Red
-  pinMode(4, OUTPUT); //Green
-  pinMode(5, OUTPUT); //Blue
-  pinMode(6, OUTPUT); //Green
-  pinMode(7, OUTPUT); //Red
-  Serial.begin(9600);
-
-}
-void loop() {
-  switchL = digitalRead(2);
-  switchR = digitalRead(8);
-
-    // first test if both buttons are pressed
-    if (switchL == HIGH && switchR == HIGH){
-      digitalWrite(5, HIGH);
-      digitalWrite(3, LOW);
-      digitalWrite(4, LOW);
-      digitalWrite(6, LOW);
-      digitalWrite(7, LOW);
-    } else {
-          // now that's out the way, we test for everything else as a whole here
-          // first test switchL
-        if (switchL == HIGH) {
-          digitalWrite(4, HIGH);
-          digitalWrite(3, LOW);
-        } else {
-          digitalWrite(4, LOW);
-          digitalWrite(3, HIGH); 
-        } // end if switchL
-          // then test switchR
-        if (switchR == HIGH) {
-          digitalWrite(6, HIGH);
-          digitalWrite(7, LOW);       
-        } else {
-          digitalWrite(6, LOW);
-          digitalWrite(7, HIGH); 
-        } //end if switchR
-    }     //end else of both high
-} 
-} 
-} 
+     // Define the 3 pins we are going to use
+     int red = 17, yellow = 22, green = 6;
+ 
+     // Setup the pins
+     pinMode(red, OUTPUT);
+     pinMode(yellow, OUTPUT);
+     pinMode(green, OUTPUT);
+ 
+     int time = 1000;   // interval at which a pin is turned HIGH/LOW
+     while(RUNNING) {
+         blink_led(red, time);
+         blink_led(yellow, time);
+         blink_led(green, time);
+     }
+ 
+     std::cout << "Program ended ...\n";
+ }
